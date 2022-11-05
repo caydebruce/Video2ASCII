@@ -25,7 +25,7 @@ def get_image(image_path):
 
 # Pixelates a given image
 def pixelate_image(image, final_w = 200):
-    w, h = image.siz # next three lines does necessary resizing
+    w, h = image.size # next three lines does necessary resizing
     final_h = int((h*final_w)/w)
     image = image.resize((final_w, final_h))
     image = ImageEnhance.Brightness(image) # helps with the darkness of ascii backgrounds
@@ -38,8 +38,7 @@ def grayscale_image(image):
     return gs_image
 
 # Turns grayscale image into list of ascii characters
-def convert_to_ascii(gs_image, ascii_chars):
-    ascii_chars = [" ",".",":","-","=","+","*","#","%","@","&"] # magic characters
+def convert_to_ascii(gs_image, ascii_chars = [" ",".",":","-","=","+","*","#","%","@","&"]):
     pixels = gs_image.getdata()
     ascii_image_list = [] # initializes final array
     for pixel in pixels:
@@ -72,5 +71,27 @@ def print_ascii(ascii_chars, image, color, image_pos):
             </html>""")
     file.close()
 
-def main(video_path):
-    config = imgkit.config(wkhtmltoimage=r'wkhtlmtoimage.exe')
+def main(video_path):   
+    config = imgkit.config(wkhtmltoimage=r'wkhtmltoimage')
+    ascii_chars = [" ",".",":","-","=","+","*","#","%","@","&"] # magic characters
+    fps, number_images = video_to_images(video_path)
+    os.mkdir('HtmlImages')
+    os.mkdir('TextImages')
+
+    for i in range(1,number_images + 1):
+        image = get_image('Images/Image{0}.jpg'.format(str(i)))
+        correct_size_image = pixelate_image(image)
+        gs_image = grayscale_image(correct_size_image)
+        converted_array = convert_to_ascii(gs_image, ascii_chars)
+        color_array = get_color(correct_size_image)
+        print_ascii(converted_array, correct_size_image, color_array, i)
+        imgkit.from_file('HtmlImages/Html{0}.html'.format(str(i)), 'TextImages/Image{0}.jpg'.format(str(i)), config = config)
+    
+    res = Image.open('TextImages/Image1.jpg').size
+    video = cv2.VideoWriter('final_video.mp4', cv2.VideoWriter_fourcc('m', 'p', '4', 'v'), int(fps), res)
+    
+    for j in range(1, number_images + 1):
+        video.write(cv2.imread('TextImages/Image{0}.jpg'.format(str(j))))
+    video.release()
+
+main("Naruto.mp4")
