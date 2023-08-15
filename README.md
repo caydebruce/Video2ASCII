@@ -9,5 +9,6 @@
 
 
 
-https://github.com/caydebruce/Video2ASCII/assets/102607803/1378cc8d-d611-4e04-93d3-cf8db288b62e
+https://github.com/caydebruce/Video2ASCII/assets/102607803/7280c90a-e5e3-4c47-999c-19503b7fa325
+
 
