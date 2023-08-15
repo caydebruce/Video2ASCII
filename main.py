@@ -24,12 +24,12 @@ def get_image(image_path):
     return initial_image
 
 # Pixelates a given image
-def pixelate_image(image, final_w = 200):
+def pixelate_image(image, final_w = 144):
     w, h = image.size # next three lines does necessary resizing
     final_h = int((h*final_w)/w)
     image = image.resize((final_w, final_h))
-    image = ImageEnhance.Brightness(image) # helps with the darkness of ascii backgrounds
-    image = image.enhance(1.5) # makes things look nicer
+    # image = ImageEnhance.Brightness(image) # helps with the darkness of ascii backgrounds
+    # image = image.enhance(1.5) # makes things look nicer
     return image
 
 # Turns image into grayscle NOT black and white
@@ -58,7 +58,7 @@ def print_ascii(ascii_chars, image, color, image_pos):
         <html>
             <body style='background-color:black'>
             <pre style='display: inline-block; border-width: 4px 6px; border-color: black; border-style: solid; background-color: black; font-size: 32px; font-face: Montserrat; font-weight: bold; line-height:60%'>""")
-    w, h = image.size
+    w, _h = image.size
     counter = 0
     for i in ascii_chars:
         color_hex_val = '%02x%02x%02x' % color[counter]
@@ -94,4 +94,4 @@ def main(video_path):
         video.write(cv2.imread('TextImages/Image{0}.jpg'.format(str(j))))
     video.release()
 
-main("Naruto.mp4")
+main(input("Please Type File Path: "))
