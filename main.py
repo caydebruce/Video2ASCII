@@ -2,6 +2,7 @@ from PIL import Image, ImageOps, ImageEnhance
 import cv2
 import os
 import imgkit
+import shutil
 
 # Turns a video frames into images
 def video_to_images(video_path):
@@ -75,6 +76,7 @@ def main(video_path):
     config = imgkit.config(wkhtmltoimage=r'wkhtmltoimage')
     ascii_chars = [" ",".",":","-","=","+","*","#","%","@","&"] # magic characters
     fps, number_images = video_to_images(video_path)
+
     os.mkdir('HtmlImages')
     os.mkdir('TextImages')
 
@@ -93,5 +95,11 @@ def main(video_path):
     for j in range(1, number_images + 1):
         video.write(cv2.imread('TextImages/Image{0}.jpg'.format(str(j))))
     video.release()
+
+    # Clean up
+    # !!! Do not change these !!!
+    shutil.rmtree('HtmlImages')
+    shutil.rmtree('TextImages')
+    shutil.rmtree('Images')
 
 main(input("Please Type File Path: "))
